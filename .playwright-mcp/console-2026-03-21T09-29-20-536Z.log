@@ -1,0 +1,20 @@
+[ 3174594ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js:34
+[ 3498150ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login:0
+[ 3498804ms] ReferenceError: CartProvider is not defined
+    at RootLayout (about://React/Server/file:///Users/charlie/workspace/pep/.next/server/chunks/ssr/%5Broot-of-the-server%5D__265cbbde._.js?8:148:295)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/145df_next_dist_compiled_130b3464._.js:4306:48)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/145df_next_dist_compiled_130b3464._.js:4554:29)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/145df_next_dist_compiled_130b3464._.js:4513:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/145df_next_dist_compiled_130b3464._.js:4622:98)
+    at progress (http://localhost:3000/_next/static/chunks/145df_next_dist_compiled_130b3464._.js:4790:25)
+[ 3500912ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/145df_next_dist_client_5b83b8da._.js:6282
+[ 3501013ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/145df_next_dist_client_5b83b8da._.js:6282
+[ 3501038ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/145df_next_dist_client_5b83b8da._.js:6282
+[ 3501104ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/145df_next_dist_client_5b83b8da._.js:6282
