@@ -1,5 +1,5 @@
 [build]
-  command = "rm -rf .netlify/cache && npm run build"
+  command = "rm -rf .next node_modules/.cache src/app/api/orders src/app/api/payment src/app/api/webhooks src/app/admin/orders && npm install && npm run build"
   publish = ".next"
 
 [build.environment]
