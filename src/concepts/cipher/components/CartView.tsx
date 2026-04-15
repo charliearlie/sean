@@ -50,7 +50,6 @@ export default function CartView() {
         </p>
         <Link
           href="/shop"
-          prefetch={false}
           style={{
             fontFamily: typography.monoFont,
             fontSize: "11px",
@@ -382,10 +381,69 @@ export default function CartView() {
               </span>
             </div>
 
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "20px",
+                paddingBottom: "20px",
+                borderBottom: `1px solid ${colors.border}`,
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: typography.monoFont,
+                  fontSize: "11px",
+                  color: colors.mutedForeground,
+                  letterSpacing: "0.1em",
+                }}
+              >
+                {t("cart.estShipping")}
+              </span>
+              <span
+                style={{
+                  fontFamily: typography.monoFont,
+                  fontSize: "12px",
+                  color: colors.foreground,
+                }}
+              >
+                At checkout
+              </span>
+            </div>
+
+            <Link
+              href="/checkout"
+              style={{
+                display: "block",
+                textAlign: "center",
+                fontFamily: typography.monoFont,
+                fontSize: "11px",
+                fontWeight: 700,
+                letterSpacing: "0.15em",
+                padding: "14px 24px",
+                background: colors.accent,
+                color: colors.accentForeground,
+                textDecoration: "none",
+                textTransform: "uppercase",
+                marginBottom: "12px",
+                transition: "all 0.2s ease-in-out",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "transparent";
+                (e.currentTarget as HTMLElement).style.color = colors.accent;
+                (e.currentTarget as HTMLElement).style.boxShadow = `inset 0 0 0 1px ${colors.accent}`;
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = colors.accent;
+                (e.currentTarget as HTMLElement).style.color = colors.accentForeground;
+                (e.currentTarget as HTMLElement).style.boxShadow = "none";
+              }}
+            >
+              {t("cart.checkout")}
+            </Link>
 
             <Link
               href="/shop"
-              prefetch={false}
               style={{
                 display: "block",
                 textAlign: "center",

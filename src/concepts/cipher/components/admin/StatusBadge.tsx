@@ -15,12 +15,26 @@ const statusColors: Record<string, string> = {
   refunded: '#f59e0b',
 }
 
+export const STATUS_LABELS: Record<string, string> = {
+  pending: 'New',
+  payment_processing: 'Processing',
+  paid: 'Paid',
+  confirmed: 'Confirmed',
+  preparing: 'Packing',
+  shipped: 'Shipped',
+  out_for_delivery: 'Out for Delivery',
+  delivered: 'Delivered',
+  cancelled: 'Cancelled',
+  refunded: 'Refunded',
+}
+
 interface StatusBadgeProps {
   status: string
 }
 
 export default function StatusBadge({ status }: StatusBadgeProps) {
   const color = statusColors[status] || '#5A6577'
+  const label = STATUS_LABELS[status] || status.replace(/_/g, ' ')
 
   return (
     <span style={{
@@ -36,7 +50,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
       padding: '3px 8px',
       whiteSpace: 'nowrap',
     }}>
-      {status.replace(/_/g, ' ')}
+      {label}
     </span>
   )
 }

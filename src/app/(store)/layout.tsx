@@ -2,6 +2,7 @@ import Nav from "@/concepts/cipher/components/Nav";
 import Footer from "@/concepts/cipher/components/Footer";
 import WhatsAppButton from "@/shared/components/WhatsAppButton";
 import AiChatWidget from "@/shared/components/AiChatWidget";
+import { ScrollToTop } from "@/shared/components/ScrollToTop";
 import { ThemeProvider } from "@/shared/context/ThemeContext";
 import { ChatProductProvider } from "@/shared/context/ChatProductContext";
 import StoreShell from "./StoreShell";
@@ -37,6 +38,7 @@ export default function CipherLayout({
     <ThemeProvider>
       <ChatProductProvider product={null}>
         <StoreShell>
+          <ScrollToTop />
           <Nav />
           <main>{children}</main>
           <Footer />

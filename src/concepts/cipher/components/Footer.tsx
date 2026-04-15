@@ -62,7 +62,7 @@ function FooterColumn({
             ) : (
               <Link
                 href={link.href}
-                prefetch={false}
+
                 style={linkStyle}
                 onMouseEnter={onEnter}
                 onMouseLeave={onLeave}

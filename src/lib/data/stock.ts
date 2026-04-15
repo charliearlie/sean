@@ -4,6 +4,7 @@ async function getClient() {
 }
 
 export async function getStockLevels() {
+
   const supabase = await getClient()
   const { data, error } = await supabase
     .from('product_variants')
@@ -14,6 +15,7 @@ export async function getStockLevels() {
 }
 
 export async function getLowStockAlerts() {
+
   const supabase = await getClient()
   const { data, error } = await supabase
     .from('product_variants')
@@ -25,7 +27,31 @@ export async function getLowStockAlerts() {
   return data
 }
 
+export async function adjustStock(
+  variantId: string,
+  quantityChange: number,
+  reason: 'sale' | 'restock' | 'adjustment' | 'return' | 'damage',
+  createdBy: string | null,
+  referenceId?: string,
+  notes?: string
+): Promise<number> {
+  const supabase = await getClient()
+
+  const { data, error } = await supabase.rpc('adjust_stock_atomic', {
+    p_variant_id: variantId,
+    p_quantity_change: quantityChange,
+    p_reason: reason,
+    p_created_by: createdBy,
+    p_reference_id: referenceId || null,
+    p_notes: notes || null,
+  })
+
+  if (error) throw error
+  return data as number
+}
+
 export async function getStockMovements(variantId?: string) {
+
   const supabase = await getClient()
   let query = supabase
     .from('stock_movements')

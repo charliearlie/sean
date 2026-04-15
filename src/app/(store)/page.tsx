@@ -1,6 +1,8 @@
 import { getFeaturedProducts, getCategories, getMostPopularProduct } from "@/lib/data/products";
 import HomeContent from "./HomeContent";
 
+export const revalidate = 300;
+
 export default async function HomePage() {
   const [featured, categories, mostPopular] = await Promise.all([
     getFeaturedProducts(),

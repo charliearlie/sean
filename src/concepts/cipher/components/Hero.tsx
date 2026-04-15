@@ -150,7 +150,7 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
           >
             <Link
               href="/shop"
-              prefetch={false}
+
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -182,7 +182,7 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
 
             <Link
               href="/shop"
-              prefetch={false}
+
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -225,7 +225,7 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
           {spotlight && (
             <Link
               href={`/product/${spotlight.slug}`}
-              prefetch={false}
+
               style={{ textDecoration: "none" }}
             >
               <div

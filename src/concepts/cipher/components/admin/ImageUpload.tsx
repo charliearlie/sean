@@ -65,7 +65,7 @@ export default function ImageUpload({ bucket, path, currentUrl, onUpload }: Imag
               width: '100%',
               height: '100%',
               display: 'block',
-              objectFit: 'cover',
+              objectFit: 'contain',
             }}
           />
         </div>

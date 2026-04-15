@@ -162,7 +162,7 @@ export default function Nav() {
         >
           <Link
             href="/"
-            prefetch={false}
+
             style={{
               fontFamily: typography.monoFont,
               fontSize: "16px",
@@ -180,7 +180,7 @@ export default function Nav() {
               <Link
                 key={link.label}
                 href={link.href}
-                prefetch={false}
+    
                 style={linkStyle}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLElement).style.color = colors.foreground;
@@ -227,7 +227,7 @@ export default function Nav() {
               {user ? (
                 <Link
                   href="/account"
-                  prefetch={false}
+      
                   style={{
                     ...linkStyle,
                     display: "flex",
@@ -246,7 +246,7 @@ export default function Nav() {
               ) : (
                 <Link
                   href="/login"
-                  prefetch={false}
+      
                   style={{
                     ...linkStyle,
                     display: "flex",
@@ -268,7 +268,13 @@ export default function Nav() {
             {/* Cart button */}
             <div style={{ position: "relative" }}>
               <button
-                onClick={() => miniCartOpen ? closeMiniCart() : openMiniCart()}
+                onClick={() => {
+                  if (window.innerWidth <= 768) {
+                    router.push("/cart");
+                  } else {
+                    miniCartOpen ? closeMiniCart() : openMiniCart();
+                  }
+                }}
                 style={{
                   ...linkStyle,
                   display: "flex",
@@ -330,7 +336,7 @@ export default function Nav() {
             <Link
               key={link.label}
               href={link.href}
-              prefetch={false}
+  
               onClick={() => setMobileOpen(false)}
               style={{
                 fontFamily: typography.monoFont,
@@ -351,7 +357,7 @@ export default function Nav() {
             <>
               <Link
                 href="/account"
-                prefetch={false}
+    
                 onClick={() => setMobileOpen(false)}
                 style={{
                   fontFamily: typography.monoFont,
@@ -394,7 +400,7 @@ export default function Nav() {
           ) : (
             <Link
               href="/login"
-              prefetch={false}
+  
               onClick={() => setMobileOpen(false)}
               style={{
                 fontFamily: typography.monoFont,

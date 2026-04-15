@@ -136,6 +136,8 @@ export default function ProductsTable({ products }: ProductsTableProps) {
         columns={columns}
         data={filtered}
         onRowClick={(row) => router.push(`/admin/products/${row.id}`)}
+        entityName="products"
+        emptyMessage="No products found"
       />
     </div>
   )

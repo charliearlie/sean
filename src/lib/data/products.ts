@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import type { Product, Category } from '@/shared/types/product'
 
 async function getClient() {
@@ -72,7 +73,7 @@ export async function getProducts(): Promise<Product[]> {
   return (data || []).map(transformProduct)
 }
 
-export async function getProductBySlug(slug: string): Promise<Product | null> {
+export const getProductBySlug = cache(async (slug: string): Promise<Product | null> => {
   const supabase = await getClient()
   const { data, error } = await supabase
     .from('products')
@@ -82,7 +83,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     .single()
   if (error && error.code !== 'PGRST116') throw error
   return data ? transformProduct(data) : null
-}
+})
 
 export async function getProductsByCategory(categorySlug: string): Promise<Product[]> {
   const supabase = await getClient()
@@ -126,28 +127,18 @@ export async function getMostPopularProduct(): Promise<Product | null> {
 export async function getCategories(): Promise<Category[]> {
   const supabase = await getClient()
 
-  const { data: cats, error: catError } = await supabase
+  const { data, error } = await supabase
     .from('categories')
-    .select('*')
+    .select('*, products(count)')
+    .eq('products.active', true)
     .order('sort_order')
-  if (catError) throw catError
+  if (error) throw error
 
-  const { data: counts, error: countError } = await supabase
-    .from('products')
-    .select('category_id')
-    .eq('active', true)
-  if (countError) throw countError
-
-  const countMap: Record<string, number> = {}
-  for (const row of counts || []) {
-    countMap[row.category_id] = (countMap[row.category_id] || 0) + 1
-  }
-
-  return (cats || []).map((c: { id: string; slug: string; name: string; description: string | null }) => ({
+  return (data || []).map((c: { id: string; slug: string; name: string; description: string | null; products: { count: number }[] }) => ({
     id: c.id,
     slug: c.slug,
     name: c.name,
     description: c.description || '',
-    productCount: countMap[c.id] || 0,
+    productCount: c.products?.[0]?.count || 0,
   }))
 }

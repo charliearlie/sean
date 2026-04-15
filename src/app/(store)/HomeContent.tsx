@@ -72,7 +72,7 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
             >
               <Link
                 href={`/shop?category=${cat.slug}`}
-                prefetch={false}
+
                 style={{
                   display: "block",
                   height: "100%",

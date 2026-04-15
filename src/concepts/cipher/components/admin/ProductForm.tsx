@@ -15,6 +15,13 @@ const labelStyle: React.CSSProperties = {
   marginBottom: '6px',
 }
 
+const hintStyle: React.CSSProperties = {
+  fontFamily: adminTypography.bodyFont,
+  fontSize: '10px',
+  color: adminColors.mutedForeground,
+  margin: '4px 0 0',
+}
+
 const inputStyle: React.CSSProperties = {
   fontFamily: adminTypography.bodyFont,
   fontSize: adminTypography.inputSize,
@@ -262,6 +269,7 @@ export default function ProductForm({
                 onChange={handleChange}
                 placeholder="99.5"
               />
+              <p style={hintStyle}>Percentage purity, e.g. 99.5</p>
             </div>
             <div>
               <label style={labelStyle}>Molecular Weight</label>
@@ -273,6 +281,7 @@ export default function ProductForm({
                 onChange={handleChange}
                 placeholder="1419.53 g/mol"
               />
+              <p style={hintStyle}>Weight in g/mol, e.g. 1419.53 g/mol</p>
             </div>
             <div>
               <label style={labelStyle}>Form Factor</label>
@@ -284,6 +293,7 @@ export default function ProductForm({
                 onChange={handleChange}
                 placeholder="Lyophilized Powder"
               />
+              <p style={hintStyle}>e.g. Lyophilized Powder, Solution</p>
             </div>
             <div style={{ gridColumn: '1 / -1' }}>
               <label style={labelStyle}>Sequence</label>
@@ -295,6 +305,7 @@ export default function ProductForm({
                 onChange={handleChange}
                 placeholder="Gly-Glu-Pro-Pro-Pro..."
               />
+              <p style={hintStyle}>Amino acid sequence separated by hyphens</p>
             </div>
             <div>
               <label style={labelStyle}>COA Batch Number</label>
@@ -306,6 +317,7 @@ export default function ProductForm({
                 onChange={handleChange}
                 placeholder="COA-2024-001"
               />
+              <p style={hintStyle}>Certificate of Analysis batch reference</p>
             </div>
           </div>
         </div>

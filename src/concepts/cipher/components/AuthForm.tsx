@@ -210,7 +210,7 @@ export default function AuthForm({ mode, onSubmit, loading, error }: AuthFormPro
             {mode === "login" ? (
               <Link
                 href="/register"
-                prefetch={false}
+
                 style={{
                   fontFamily: typography.monoFont,
                   fontSize: "10px",
@@ -232,7 +232,7 @@ export default function AuthForm({ mode, onSubmit, loading, error }: AuthFormPro
             ) : (
               <Link
                 href="/login"
-                prefetch={false}
+
                 style={{
                   fontFamily: typography.monoFont,
                   fontSize: "10px",

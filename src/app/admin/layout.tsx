@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { cipherTokens } from '@/concepts/cipher/tokens'
 import AdminNav from '@/concepts/cipher/components/admin/AdminNav'
+import Breadcrumbs from '@/concepts/cipher/components/admin/Breadcrumbs'
 
 const { colors, adminBorders } = cipherTokens
 
@@ -91,6 +92,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       >
         <AdminNav />
         <main style={{ padding: '24px 16px', overflowX: 'hidden', minHeight: '100vh', borderRadius: adminBorders.radius }}>
+          <Breadcrumbs />
           {children}
         </main>
       </div>

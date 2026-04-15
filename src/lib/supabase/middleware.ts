@@ -31,33 +31,50 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protect /account routes
-  if (!user && request.nextUrl.pathname.startsWith('/account')) {
+  const pathname = request.nextUrl.pathname
+
+  // Account routes: require any authenticated user (no admin check needed)
+  if (pathname.startsWith('/account') && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
+    url.searchParams.set('redirect', pathname)
     return NextResponse.redirect(url)
   }
 
-  // Protect /admin routes
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!user) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/login'
-      return NextResponse.redirect(url)
-    }
+  // Public paths that bypass the under-construction gate
+  const isPublicPath = pathname === '/under-construction'
+    || pathname.startsWith('/login')
+    || pathname.startsWith('/api/')
+    || pathname.startsWith('/payment')
 
-    // Check admin role
+  // Only query admin role when a route actually needs it:
+  // - /admin routes (admin guard)
+  // - Non-public, non-account routes (under-construction gate)
+  const needsAdminCheck = pathname.startsWith('/admin')
+    || (!isPublicPath && !pathname.startsWith('/account'))
+  let isAdmin = false
+  if (user && needsAdminCheck) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
+    isAdmin = profile?.role === 'admin'
+  }
 
-    if (!profile || profile.role !== 'admin') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/'
-      return NextResponse.redirect(url)
-    }
+  // Admin routes: require admin role
+  if (pathname.startsWith('/admin') && !isAdmin) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    url.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(url)
+  }
+
+  // Under construction gate: only admins can see the rest of the site
+  if (!isPublicPath && !pathname.startsWith('/admin') && !pathname.startsWith('/account') && !isAdmin) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/under-construction'
+    return NextResponse.redirect(url)
   }
 
   return supabaseResponse

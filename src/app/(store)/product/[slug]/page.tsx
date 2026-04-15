@@ -1,9 +1,24 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { createClient } from "@supabase/supabase-js";
 import { getProductBySlug } from "@/lib/data/products";
 import ProductView from "@/concepts/cipher/components/ProductView";
 import ResearchDisclaimer from "@/shared/components/ResearchDisclaimer";
 import ProductChatProvider from "./ProductChatProvider";
+
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+  const { data } = await supabase
+    .from("products")
+    .select("slug")
+    .eq("active", true);
+  return (data || []).map((p) => ({ slug: p.slug }));
+}
 
 export async function generateMetadata({
   params,

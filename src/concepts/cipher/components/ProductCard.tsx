@@ -50,7 +50,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       <Link
         href={`/product/${product.slug}`}
-        prefetch={false}
+
         style={{ textDecoration: "none", color: "inherit", display: "block" }}
       >
         {/* Header row - compound code + stock */}

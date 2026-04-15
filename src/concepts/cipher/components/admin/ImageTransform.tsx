@@ -24,6 +24,7 @@ export default function ImageTransform({
   const [transforming, setTransforming] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [previewDark, setPreviewDark] = useState<string | null>(darkImageUrl)
+  const [showConfirm, setShowConfirm] = useState(false)
 
   const handleTransform = async () => {
     if (!lightImageUrl) return
@@ -131,7 +132,7 @@ export default function ImageTransform({
                 <img
                   src={lightImageUrl}
                   alt="Light"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               ) : (
                 <span style={{ color: colors.mutedForeground, fontSize: '11px' }}>No image</span>
@@ -166,7 +167,7 @@ export default function ImageTransform({
                 <img
                   src={previewDark}
                   alt="Dark"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               ) : (
                 <span style={{ color: colors.mutedForeground, fontSize: '11px' }}>Not generated</span>
@@ -180,7 +181,7 @@ export default function ImageTransform({
         )}
 
         <button
-          onClick={handleTransform}
+          onClick={() => setShowConfirm(true)}
           disabled={transforming || !lightImageUrl}
           style={{
             fontFamily: typography.monoFont,
@@ -197,6 +198,91 @@ export default function ImageTransform({
           {transforming ? 'Transforming...' : previewDark ? 'Re-generate Dark Image' : 'Generate Dark Image'}
         </button>
       </div>
+
+      {/* Confirmation Dialog */}
+      {showConfirm && (
+        <div
+          onClick={() => setShowConfirm(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 2000,
+            background: 'rgba(0, 0, 0, 0.6)',
+            backdropFilter: 'blur(2px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: colors.card,
+              border: `1px solid ${colors.border}`,
+              padding: '24px',
+              maxWidth: '380px',
+              width: '90%',
+            }}
+          >
+            <p style={{
+              fontFamily: typography.monoFont,
+              fontSize: '13px',
+              fontWeight: 700,
+              color: colors.foreground,
+              margin: '0 0 8px',
+            }}>
+              Confirm Image Generation
+            </p>
+            <p style={{
+              fontFamily: typography.monoFont,
+              fontSize: '12px',
+              color: colors.mutedForeground,
+              margin: '0 0 20px',
+              lineHeight: 1.5,
+            }}>
+              This will use <span style={{ color: '#f59e0b', fontWeight: 600 }}>1 credit</span> to generate a dark background version of this image.
+            </p>
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setShowConfirm(false)}
+                style={{
+                  fontFamily: typography.monoFont,
+                  fontSize: '10px',
+                  letterSpacing: '0.1em',
+                  padding: '8px 16px',
+                  background: 'transparent',
+                  color: colors.mutedForeground,
+                  border: `1px solid ${colors.border}`,
+                  cursor: 'pointer',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowConfirm(false)
+                  handleTransform()
+                }}
+                style={{
+                  fontFamily: typography.monoFont,
+                  fontSize: '10px',
+                  letterSpacing: '0.1em',
+                  padding: '8px 16px',
+                  background: colors.accent,
+                  color: colors.accentForeground,
+                  border: 'none',
+                  cursor: 'pointer',
+                  textTransform: 'uppercase',
+                  fontWeight: 700,
+                }}
+              >
+                Use 1 Credit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

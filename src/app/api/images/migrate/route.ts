@@ -46,6 +46,10 @@ export async function POST() {
       try {
         // Read file from public directory
         const relativePath = product.image_url.replace(/^\//, '')
+        if (relativePath.includes('..')) {
+          failed.push(`${product.slug}: Invalid path`)
+          continue
+        }
         const filePath = path.join(process.cwd(), 'public', relativePath)
         const fileBuffer = await fs.readFile(filePath)
 

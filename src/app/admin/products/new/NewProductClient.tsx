@@ -6,7 +6,7 @@ import { cipherTokens } from '@/concepts/cipher/tokens'
 import ProductForm, { ProductData } from '@/concepts/cipher/components/admin/ProductForm'
 import ImageUpload from '@/concepts/cipher/components/admin/ImageUpload'
 
-const { colors, typography } = cipherTokens
+const { colors, typography, adminTypography, adminColors } = cipherTokens
 
 const labelStyle: React.CSSProperties = {
   fontFamily: typography.monoFont,
@@ -24,9 +24,61 @@ interface Category {
 
 interface NewProductClientProps {
   categories: Category[]
+  cloneFrom?: Partial<ProductData>
 }
 
-export default function NewProductClient({ categories }: NewProductClientProps) {
+const STEPS = ['Product Details', 'Upload Image', 'Add Variants']
+
+function StepIndicator({ currentStep }: { currentStep: number }) {
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      marginBottom: '24px',
+    }}>
+      {STEPS.map((step, i) => (
+        <div key={step} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {i > 0 && (
+            <span style={{
+              width: '24px',
+              height: '1px',
+              background: i <= currentStep ? colors.accent : colors.border,
+            }} />
+          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '20px',
+              height: '20px',
+              fontSize: '10px',
+              fontFamily: typography.monoFont,
+              fontWeight: 700,
+              border: `1px solid ${i <= currentStep ? colors.accent : colors.border}`,
+              background: i < currentStep ? colors.accent : 'transparent',
+              color: i < currentStep ? colors.accentForeground : i === currentStep ? colors.accent : adminColors.mutedForeground,
+            }}>
+              {i < currentStep ? '\u2713' : i + 1}
+            </span>
+            <span style={{
+              fontFamily: adminTypography.bodyFont,
+              fontSize: '10px',
+              letterSpacing: '0.05em',
+              color: i === currentStep ? colors.foreground : adminColors.mutedForeground,
+              textTransform: 'uppercase',
+            }}>
+              {step}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export default function NewProductClient({ categories, cloneFrom }: NewProductClientProps) {
   const router = useRouter()
   const [createdProductId, setCreatedProductId] = useState<string | null>(null)
 
@@ -66,12 +118,13 @@ export default function NewProductClient({ categories }: NewProductClientProps) 
       return
     }
 
-    router.push(`/admin/products/${createdProductId}`)
+    router.push(`/admin/products/${createdProductId}?new=1`)
   }
 
   if (createdProductId) {
     return (
       <div>
+        <StepIndicator currentStep={1} />
         <div style={{
           borderBottom: `1px solid ${colors.border}`,
           paddingBottom: '16px',
@@ -113,7 +166,7 @@ export default function NewProductClient({ categories }: NewProductClientProps) 
 
         <button
           type="button"
-          onClick={() => router.push(`/admin/products/${createdProductId}`)}
+          onClick={() => router.push(`/admin/products/${createdProductId}?new=1`)}
           style={{
             fontFamily: typography.monoFont,
             fontSize: '10px',
@@ -134,6 +187,7 @@ export default function NewProductClient({ categories }: NewProductClientProps) 
 
   return (
     <div>
+      <StepIndicator currentStep={0} />
       {/* Header */}
       <div style={{
         borderBottom: `1px solid ${colors.border}`,
@@ -149,11 +203,12 @@ export default function NewProductClient({ categories }: NewProductClientProps) 
           letterSpacing: '0.05em',
           margin: 0,
         }}>
-          NEW PRODUCT
+          {cloneFrom ? 'DUPLICATE PRODUCT' : 'NEW PRODUCT'}
         </h1>
       </div>
 
       <ProductForm
+        initialData={cloneFrom}
         categories={categories}
         onSubmit={handleSubmit}
         submitLabel="Create Product"

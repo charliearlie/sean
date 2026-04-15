@@ -4,16 +4,19 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { cipherTokens } from '@/concepts/cipher/tokens'
+import AdminIcon from './AdminIcon'
 
 const { colors, adminTypography, adminColors, adminBorders } = cipherTokens
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: '\u25A0' },
-  { href: '/admin/products', label: 'Products', icon: '\u2666' },
-  { href: '/admin/customers', label: 'Customers', icon: '\u25CB' },
-  { href: '/admin/stock', label: 'Stock', icon: '\u25A3' },
-  { href: '/admin/chatbot', label: 'Chatbot', icon: '\u25C8' },
-  { href: '/admin/settings', label: 'Settings', icon: '⚙' },
+  { href: '/admin', label: 'Dashboard', icon: 'dashboard' },
+  { href: '/admin/products', label: 'Products', icon: 'products' },
+  { href: '/admin/orders', label: 'Orders', icon: 'orders' },
+  { href: '/admin/customers', label: 'Customers', icon: 'customers' },
+  { href: '/admin/stock', label: 'Stock', icon: 'stock' },
+  { href: '/admin/shipping', label: 'Shipping', icon: 'shipping' },
+  { href: '/admin/chatbot', label: 'Chatbot', icon: 'chatbot' },
+  { href: '/admin/settings', label: 'Settings', icon: 'settings' },
 ]
 
 export default function AdminNav() {
@@ -108,7 +111,7 @@ export default function AdminNav() {
           color: adminColors.mutedForeground,
           textTransform: 'uppercase',
         }}>
-          Admin
+          {navItems.find((item) => isActive(item.href))?.label || 'Admin'}
         </span>
       </div>
 
@@ -213,9 +216,7 @@ export default function AdminNav() {
                   transition: 'all 0.15s ease-in-out',
                 }}
               >
-                <span style={{ fontSize: '12px', width: '16px', textAlign: 'center' }}>
-                  {item.icon}
-                </span>
+                <AdminIcon name={item.icon} size={16} />
                 {item.label}
               </Link>
             )

@@ -18,6 +18,7 @@ export default function AccountNav() {
 
   const navItems = [
     { label: t("account.dashboard"), href: "/account" },
+    { label: t("account.orders"), href: "/account/orders" },
     { label: t("account.profile"), href: "/account/profile" },
   ];
 
@@ -60,7 +61,6 @@ export default function AccountNav() {
           <Link
             key={item.href}
             href={item.href}
-            prefetch={false}
             style={{
               display: "block",
               fontFamily: typography.monoFont,
