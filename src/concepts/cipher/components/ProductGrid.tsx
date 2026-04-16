@@ -5,7 +5,6 @@ import { cipherTokens } from "@/concepts/cipher/tokens";
 import { staggerContainer } from "@/lib/motion";
 import type { Product } from "@/shared/types/product";
 import ProductCard from "@/concepts/cipher/components/ProductCard";
-import { useColors } from "@/shared/context/ThemeContext";
 
 const { motion: motionTokens } = cipherTokens;
 
@@ -14,7 +13,6 @@ interface ProductGridProps {
 }
 
 export default function ProductGrid({ products }: ProductGridProps) {
-  const colors = useColors();
   return (
     <motion.div
       key={products.map(p => p.id).join(',')}
@@ -25,13 +23,11 @@ export default function ProductGrid({ products }: ProductGridProps) {
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-        gap: "1px",
+        gap: "24px",
       }}
     >
       {products.map((product) => (
-        <div key={product.id} style={{ border: `1px solid ${colors.border}` }}>
-          <ProductCard product={product} />
-        </div>
+        <ProductCard key={product.id} product={product} />
       ))}
     </motion.div>
   );

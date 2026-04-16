@@ -20,6 +20,13 @@
   "hero.trust1": ">98% HPLC-Verified Purity",
   "hero.trust2": "Certificate of Analysis Included",
   "hero.trust3": "UAE & GCC Cold-Chain Shipping",
+  "hero.badge": "RESEARCH-GRADE COMPOUNDS",
+  "hero.stat1Value": ">98%",
+  "hero.stat1Label": "Purity Verified",
+  "hero.stat2Value": "25+",
+  "hero.stat2Label": "Compounds",
+  "hero.stat3Value": "UAE-Wide",
+  "hero.stat3Label": "Cold-Chain Delivery",
 
   "home.compoundIndex": "Shop by Category",
   "home.featuredTitle": "Best Sellers",
@@ -198,6 +205,12 @@
 
   "age.banner": "This site contains research chemicals available to qualified researchers aged 21+. By continuing, you confirm you meet these requirements.",
   "age.confirm": "I CONFIRM",
+
+  "home.newsletter.label": "STAY INFORMED",
+  "home.newsletter.title": "Research Updates",
+  "home.newsletter.subtitle": "Get notified about new compounds, batch releases, and research protocols.",
+  "home.newsletter.placeholder": "Enter your email",
+  "home.newsletter.button": "SUBSCRIBE",
 
   "disclaimer.title": "Research Use Only.",
   "disclaimer.text": "All products listed on this platform are intended solely for in-vitro research and laboratory use. They are not intended for human or animal consumption, medical diagnosis, or therapeutic application. By accessing this site, you confirm you are a qualified researcher or authorized procurement agent. No statements have been evaluated by any regulatory authority. Purchasers assume all responsibility for compliance with applicable local, national, and international regulations."

@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { cipherTokens } from "@/concepts/cipher/tokens";
+import { cipherTokens, glowEffects } from "@/concepts/cipher/tokens";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import ResearchDisclaimer from "@/shared/components/ResearchDisclaimer";
 import { useLocale, useT } from "@/shared/i18n/context";
-import { useColors } from "@/shared/context/ThemeContext";
+import { useColors, useTheme } from "@/shared/context/ThemeContext";
 
 const { typography, motion: motionTokens } = cipherTokens;
 
@@ -62,7 +62,6 @@ function FooterColumn({
             ) : (
               <Link
                 href={link.href}
-
                 style={linkStyle}
                 onMouseEnter={onEnter}
                 onMouseLeave={onLeave}
@@ -81,6 +80,11 @@ export default function Footer() {
   const { locale } = useLocale();
   const t = useT();
   const colors = useColors();
+  const { theme } = useTheme();
+
+  const borderColor = theme === "dark"
+    ? "rgba(255, 255, 255, 0.06)"
+    : "rgba(0, 0, 0, 0.06)";
 
   const whatsappMessage = locale === "ar" ? t("whatsapp.footerMessage") : "As-salamu alaykum, I'd like to inquire about research peptides.";
   const whatsappUrl = `https://wa.me/971501234567?text=${encodeURIComponent(whatsappMessage)}`;
@@ -106,9 +110,22 @@ export default function Footer() {
       id="contact"
       style={{
         background: colors.card,
-        borderTop: `1px solid ${colors.border}`,
+        borderTop: `1px solid ${borderColor}`,
       }}
     >
+      <style>{`
+        .footer-grid {
+          display: grid;
+          grid-template-columns: 1.5fr 1fr 1fr 1fr;
+          gap: 56px;
+        }
+        @media (max-width: 768px) {
+          .footer-grid {
+            grid-template-columns: 1fr !important;
+            gap: 40px !important;
+          }
+        }
+      `}</style>
       <motion.div
         variants={staggerContainer(motionTokens.staggerChildren)}
         initial="hidden"
@@ -117,16 +134,10 @@ export default function Footer() {
         style={{
           maxWidth: "1280px",
           margin: "0 auto",
-          padding: "64px 24px 32px",
+          padding: "80px 24px 40px",
         }}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1.5fr 1fr 1fr 1fr",
-            gap: "48px",
-          }}
-        >
+        <div className="footer-grid">
           <motion.div variants={fadeInUp(motionTokens.duration, motionTokens.ease)}>
             <p
               style={{
@@ -136,6 +147,7 @@ export default function Footer() {
                 letterSpacing: "0.2em",
                 color: colors.accent,
                 marginBottom: "16px",
+                textShadow: "0 0 20px rgba(0, 255, 178, 0.3)",
               }}
             >
               PURE PEPTIDES
@@ -166,15 +178,18 @@ export default function Footer() {
                 textDecoration: "none",
                 padding: "8px 16px",
                 border: `1px solid ${colors.accent}`,
-                transition: "all 0.2s ease-in-out",
+                borderRadius: "8px",
+                transition: "all 0.3s ease-in-out",
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.background = colors.accent;
                 (e.currentTarget as HTMLElement).style.color = colors.accentForeground;
+                (e.currentTarget as HTMLElement).style.boxShadow = glowEffects.button;
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.background = "transparent";
                 (e.currentTarget as HTMLElement).style.color = colors.accent;
+                (e.currentTarget as HTMLElement).style.boxShadow = "none";
               }}
             >
               {t("footer.whatsapp")}
@@ -200,7 +215,7 @@ export default function Footer() {
 
         <div
           style={{
-            borderTop: `1px solid ${colors.border}`,
+            borderTop: `1px solid ${borderColor}`,
             marginTop: "24px",
             paddingTop: "16px",
             display: "flex",

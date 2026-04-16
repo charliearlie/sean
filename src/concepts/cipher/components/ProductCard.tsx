@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { cipherTokens } from "@/concepts/cipher/tokens";
+import { cipherTokens, glowEffects } from "@/concepts/cipher/tokens";
 import { fadeInUp } from "@/lib/motion";
 import { formatAED } from "@/shared/utils/currency";
 import type { Product } from "@/shared/types/product";
@@ -35,6 +35,16 @@ export default function ProductCard({ product }: ProductCardProps) {
     ? (product.imageUrlDark || product.imageUrl)
     : (product.imageUrl || product.imageUrlDark);
 
+  const glassBg = theme === "dark"
+    ? "rgba(15, 19, 24, 0.5)"
+    : "rgba(248, 249, 251, 0.5)";
+  const glassBorder = theme === "dark"
+    ? "rgba(255, 255, 255, 0.06)"
+    : "rgba(0, 0, 0, 0.06)";
+  const subtleBorder = theme === "dark"
+    ? "rgba(255, 255, 255, 0.06)"
+    : "rgba(0, 0, 0, 0.04)";
+
   return (
     <motion.div
       variants={fadeInUp(motionTokens.duration, motionTokens.ease)}
@@ -42,15 +52,18 @@ export default function ProductCard({ product }: ProductCardProps) {
       onMouseLeave={() => setHovered(false)}
       style={{
         position: "relative",
-        border: `1px solid ${hovered ? colors.accent : colors.border}`,
-        background: colors.card,
+        border: `1px solid ${hovered ? colors.accent + "40" : glassBorder}`,
+        background: glassBg,
+        backdropFilter: "blur(8px)",
+        borderRadius: "12px",
         overflow: "hidden",
-        transition: "border-color 0.3s ease-in-out",
+        transition: "all 0.3s ease-in-out",
+        boxShadow: hovered ? glowEffects.cardHover : "none",
+        transform: hovered ? "translateY(-4px)" : "translateY(0)",
       }}
     >
       <Link
         href={`/product/${product.slug}`}
-
         style={{ textDecoration: "none", color: "inherit", display: "block" }}
       >
         {/* Header row - compound code + stock */}
@@ -60,7 +73,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             justifyContent: "space-between",
             alignItems: "center",
             padding: "12px 16px",
-            borderBottom: `1px solid ${colors.border}`,
+            borderBottom: `1px solid ${subtleBorder}`,
           }}
         >
           <span
@@ -92,7 +105,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             position: "relative",
             height: "240px",
             overflow: "hidden",
-            borderBottom: `1px solid ${colors.border}`,
+            borderBottom: `1px solid ${subtleBorder}`,
             background: colors.muted,
           }}
         >
@@ -103,14 +116,14 @@ export default function ProductCard({ product }: ProductCardProps) {
             sizes="(max-width: 768px) 50vw, 33vw"
             style={{
               objectFit: "cover",
-              transition: "transform 0.3s ease-in-out",
+              transition: "transform 0.5s ease-in-out",
               ...(hovered ? { transform: "scale(1.05)" } : {}),
             }}
           />
         </div>
 
         {/* Data rows */}
-        <div style={{ padding: "16px" }}>
+        <div style={{ padding: "20px" }}>
           <p
             style={{
               fontSize: "15px",
@@ -143,15 +156,15 @@ export default function ProductCard({ product }: ProductCardProps) {
               justifyContent: "space-between",
               alignItems: "baseline",
               paddingTop: "12px",
-              borderTop: `1px solid ${colors.border}`,
+              borderTop: `1px solid ${subtleBorder}`,
             }}
           >
             <span
               style={{
                 fontFamily: typography.monoFont,
-                fontSize: "14px",
+                fontSize: "15px",
                 fontWeight: 600,
-                color: colors.foreground,
+                color: colors.accent,
               }}
             >
               {minPrice === maxPrice
@@ -182,8 +195,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             left: 0,
             right: 0,
             background: `linear-gradient(180deg, transparent 0%, ${colors.card}f0 20%, ${colors.card} 100%)`,
-            padding: "40px 16px 16px",
+            padding: "40px 20px 20px",
             pointerEvents: "none",
+            borderRadius: "0 0 12px 12px",
           }}
         >
           <p

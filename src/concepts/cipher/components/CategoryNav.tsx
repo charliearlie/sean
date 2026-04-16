@@ -6,7 +6,7 @@ import { fadeIn } from "@/lib/motion";
 import type { Category } from "@/shared/types/product";
 import { useLocale, useT } from "@/shared/i18n/context";
 import { getLocalizedCategory } from "@/shared/i18n/product-data";
-import { useColors } from "@/shared/context/ThemeContext";
+import { useColors, useTheme } from "@/shared/context/ThemeContext";
 
 const { typography, motion: motionTokens } = cipherTokens;
 
@@ -24,6 +24,28 @@ export default function CategoryNav({
   const { locale } = useLocale();
   const t = useT();
   const colors = useColors();
+  const { theme } = useTheme();
+
+  const glassBorder = theme === "dark"
+    ? "rgba(255, 255, 255, 0.06)"
+    : "rgba(0, 0, 0, 0.06)";
+
+  const getTabStyle = (isActive: boolean): React.CSSProperties => ({
+    fontFamily: typography.monoFont,
+    fontSize: "11px",
+    letterSpacing: "0.12em",
+    color: isActive ? colors.accent : colors.mutedForeground,
+    background: isActive ? "rgba(0, 255, 178, 0.08)" : "transparent",
+    border: isActive ? `1px solid ${colors.accent}40` : `1px solid transparent`,
+    borderRadius: "999px",
+    padding: "8px 18px",
+    cursor: "pointer",
+    textTransform: "uppercase",
+    whiteSpace: "nowrap",
+    transition: "all 0.2s ease-in-out",
+    ...(isActive ? { boxShadow: "0 0 16px rgba(0, 255, 178, 0.15)" } : {}),
+  });
+
   return (
     <motion.div
       variants={fadeIn(motionTokens.duration, motionTokens.ease)}
@@ -31,37 +53,25 @@ export default function CategoryNav({
       animate="visible"
       style={{
         display: "flex",
-        gap: "0px",
-        borderBottom: `1px solid ${colors.border}`,
+        gap: "8px",
+        paddingBottom: "16px",
         overflowX: "auto",
+        flexWrap: "wrap",
       }}
     >
       <button
         onClick={() => onSelect(undefined)}
-        style={{
-          fontFamily: typography.monoFont,
-          fontSize: "11px",
-          letterSpacing: "0.12em",
-          color: !activeSlug ? colors.accent : colors.mutedForeground,
-          background: "transparent",
-          border: "none",
-          borderBottom: !activeSlug
-            ? `2px solid ${colors.accent}`
-            : "2px solid transparent",
-          padding: "12px 20px",
-          cursor: "pointer",
-          textTransform: "uppercase",
-          whiteSpace: "nowrap",
-          transition: "all 0.2s ease-in-out",
-        }}
+        style={getTabStyle(!activeSlug)}
         onMouseEnter={(e) => {
           if (activeSlug) {
             (e.currentTarget as HTMLElement).style.color = colors.foreground;
+            (e.currentTarget as HTMLElement).style.borderColor = glassBorder;
           }
         }}
         onMouseLeave={(e) => {
           if (activeSlug) {
             (e.currentTarget as HTMLElement).style.color = colors.mutedForeground;
+            (e.currentTarget as HTMLElement).style.borderColor = "transparent";
           }
         }}
       >
@@ -73,30 +83,17 @@ export default function CategoryNav({
           <button
             key={cat.id}
             onClick={() => onSelect(cat.slug)}
-            style={{
-              fontFamily: typography.monoFont,
-              fontSize: "11px",
-              letterSpacing: "0.12em",
-              color: isActive ? colors.accent : colors.mutedForeground,
-              background: "transparent",
-              border: "none",
-              borderBottom: isActive
-                ? `2px solid ${colors.accent}`
-                : "2px solid transparent",
-              padding: "12px 20px",
-              cursor: "pointer",
-              textTransform: "uppercase",
-              whiteSpace: "nowrap",
-              transition: "all 0.2s ease-in-out",
-            }}
+            style={getTabStyle(isActive)}
             onMouseEnter={(e) => {
               if (!isActive) {
                 (e.currentTarget as HTMLElement).style.color = colors.foreground;
+                (e.currentTarget as HTMLElement).style.borderColor = glassBorder;
               }
             }}
             onMouseLeave={(e) => {
               if (!isActive) {
                 (e.currentTarget as HTMLElement).style.color = colors.mutedForeground;
+                (e.currentTarget as HTMLElement).style.borderColor = "transparent";
               }
             }}
           >

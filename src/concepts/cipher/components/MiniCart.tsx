@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { cipherTokens } from "@/concepts/cipher/tokens";
+import { cipherTokens, glowEffects } from "@/concepts/cipher/tokens";
 import { useCart } from "@/shared/context/CartContext";
-import { useColors } from "@/shared/context/ThemeContext";
+import { useColors, useTheme } from "@/shared/context/ThemeContext";
 import { formatAED } from "@/shared/utils/currency";
 
 const { typography } = cipherTokens;
@@ -13,6 +13,9 @@ const { typography } = cipherTokens;
 export default function MiniCart() {
   const { miniCartOpen, lastAddedItem, closeMiniCart, totalItems, totalPrice, state } = useCart();
   const colors = useColors();
+  const { theme } = useTheme();
+  const glassBg = theme === "dark" ? "rgba(15, 19, 24, 0.9)" : "rgba(248, 249, 251, 0.9)";
+  const glassBorder = theme === "dark" ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)";
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
@@ -45,8 +48,9 @@ export default function MiniCart() {
             left: 0 !important;
             right: 0 !important;
             width: auto !important;
-            top: 56px !important;
+            top: 64px !important;
             margin-top: 0 !important;
+            border-radius: 0 !important;
           }
         }
       `}</style>
@@ -67,8 +71,10 @@ export default function MiniCart() {
               right: 0,
               marginTop: "8px",
               width: "320px",
-              background: colors.card,
-              border: `1px solid ${colors.border}`,
+              background: glassBg,
+              backdropFilter: "blur(16px)",
+              border: `1px solid ${glassBorder}`,
+              borderRadius: "12px",
               zIndex: 200,
               boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
             }}
@@ -77,8 +83,9 @@ export default function MiniCart() {
             <div
               style={{
                 padding: "10px 16px",
-                background: colors.muted,
-                borderBottom: `1px solid ${colors.border}`,
+                background: "transparent",
+                borderBottom: `1px solid ${glassBorder}`,
+                borderRadius: "12px 12px 0 0",
                 fontFamily: typography.monoFont,
                 fontSize: "9px",
                 letterSpacing: "0.2em",
@@ -139,7 +146,7 @@ export default function MiniCart() {
                     key={`${item.productId}-${item.variantId}`}
                     style={{
                       padding: "8px 0",
-                      borderBottom: `1px solid ${colors.border}`,
+                      borderBottom: `1px solid ${glassBorder}`,
                     }}
                   >
                     <p
@@ -190,7 +197,7 @@ export default function MiniCart() {
             <div
               style={{
                 padding: "10px 16px",
-                borderTop: `1px solid ${colors.border}`,
+                borderTop: `1px solid ${glassBorder}`,
                 fontFamily: typography.monoFont,
                 fontSize: "10px",
                 color: colors.mutedForeground,
@@ -207,7 +214,7 @@ export default function MiniCart() {
             <div
               style={{
                 padding: "12px 16px",
-                borderTop: `1px solid ${colors.border}`,
+                borderTop: `1px solid ${glassBorder}`,
                 display: "flex",
                 flexDirection: "column",
                 gap: "8px",
@@ -228,8 +235,10 @@ export default function MiniCart() {
                   background: colors.accent,
                   color: colors.accentForeground,
                   border: "none",
+                  borderRadius: "8px",
                   cursor: "pointer",
                   textTransform: "uppercase",
+                  boxShadow: glowEffects.button,
                 }}
               >
                 View Cart

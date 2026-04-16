@@ -2,13 +2,13 @@
 
 import { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { cipherTokens } from "@/concepts/cipher/tokens";
+import { cipherTokens, glowEffects } from "@/concepts/cipher/tokens";
 import CategoryNav from "@/concepts/cipher/components/CategoryNav";
 import ProductGrid from "@/concepts/cipher/components/ProductGrid";
 import MotionWrapper from "@/concepts/cipher/components/MotionWrapper";
 import AgeVerificationBanner from "@/shared/components/AgeVerificationBanner";
 import ResearchDisclaimer from "@/shared/components/ResearchDisclaimer";
-import { useColors } from "@/shared/context/ThemeContext";
+import { useColors, useTheme } from "@/shared/context/ThemeContext";
 import type { Product, Category } from "@/shared/types/product";
 
 const { typography } = cipherTokens;
@@ -32,11 +32,16 @@ function ShopContentInner({ products, categories }: ShopContentProps) {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") ?? undefined;
   const colors = useColors();
+  const { theme } = useTheme();
 
   const [activeCategory, setActiveCategory] = useState<string | undefined>(
     initialCategory
   );
   const [sortKey, setSortKey] = useState<SortKey>("name");
+
+  const glassBorder = theme === "dark"
+    ? "rgba(255, 255, 255, 0.06)"
+    : "rgba(0, 0, 0, 0.06)";
 
   const filtered = useMemo(() => {
     const list = activeCategory
@@ -65,12 +70,12 @@ function ShopContentInner({ products, categories }: ShopContentProps) {
     <>
       <AgeVerificationBanner />
 
-      <div style={{ paddingTop: "56px" }}>
+      <div style={{ paddingTop: "64px" }}>
         {/* Page header */}
         <div
           style={{
-            borderBottom: `1px solid ${colors.border}`,
-            padding: "40px 24px 0",
+            borderBottom: `1px solid ${glassBorder}`,
+            padding: "48px 24px 0",
             maxWidth: "1280px",
             margin: "0 auto",
           }}
@@ -79,14 +84,14 @@ function ShopContentInner({ products, categories }: ShopContentProps) {
             <p
               style={{
                 fontFamily: typography.monoFont,
-                fontSize: "10px",
-                letterSpacing: "0.3em",
-                color: colors.mutedForeground,
+                fontSize: "11px",
+                letterSpacing: "0.2em",
+                color: colors.accent,
                 textTransform: "uppercase",
-                marginBottom: "8px",
+                marginBottom: "12px",
               }}
             >
-              {/* Compound Catalogue */}
+              COMPOUND CATALOGUE
             </p>
             <h1
               style={{
@@ -94,6 +99,7 @@ function ShopContentInner({ products, categories }: ShopContentProps) {
                 fontWeight: 700,
                 color: colors.foreground,
                 marginBottom: "24px",
+                textShadow: glowEffects.textSubtle,
               }}
             >
               Research Inventory
@@ -129,7 +135,7 @@ function ShopContentInner({ products, categories }: ShopContentProps) {
           >
             {filtered.length} compound{filtered.length !== 1 ? "s" : ""}
           </span>
-          <div style={{ display: "flex", gap: "0px" }}>
+          <div style={{ display: "flex", gap: "8px" }}>
             {(
               [
                 { key: "name", label: "Name" },
@@ -137,31 +143,32 @@ function ShopContentInner({ products, categories }: ShopContentProps) {
                 { key: "price-desc", label: "Price ↓" },
                 { key: "purity", label: "Purity" },
               ] as { key: SortKey; label: string }[]
-            ).map((s) => (
-              <button
-                key={s.key}
-                onClick={() => setSortKey(s.key)}
-                style={{
-                  fontFamily: typography.monoFont,
-                  fontSize: "10px",
-                  letterSpacing: "0.1em",
-                  color:
-                    sortKey === s.key ? colors.accent : colors.mutedForeground,
-                  background: "transparent",
-                  border: `1px solid ${sortKey === s.key ? colors.accent : colors.border}`,
-                  borderRight:
-                    s.key === "purity"
-                      ? `1px solid ${sortKey === s.key ? colors.accent : colors.border}`
-                      : "none",
-                  padding: "8px 14px",
-                  cursor: "pointer",
-                  textTransform: "uppercase",
-                  transition: "all 0.15s ease-in-out",
-                }}
-              >
-                {s.label}
-              </button>
-            ))}
+            ).map((s) => {
+              const isActive = sortKey === s.key;
+              return (
+                <button
+                  key={s.key}
+                  onClick={() => setSortKey(s.key)}
+                  style={{
+                    fontFamily: typography.monoFont,
+                    fontSize: "10px",
+                    letterSpacing: "0.1em",
+                    color: isActive ? colors.accent : colors.mutedForeground,
+                    background: isActive
+                      ? "rgba(0, 255, 178, 0.08)"
+                      : "transparent",
+                    border: `1px solid ${isActive ? colors.accent + "40" : glassBorder}`,
+                    borderRadius: "6px",
+                    padding: "8px 14px",
+                    cursor: "pointer",
+                    textTransform: "uppercase",
+                    transition: "all 0.2s ease-in-out",
+                  }}
+                >
+                  {s.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -170,7 +177,7 @@ function ShopContentInner({ products, categories }: ShopContentProps) {
           style={{
             maxWidth: "1280px",
             margin: "0 auto",
-            padding: "0 24px 64px",
+            padding: "0 24px 80px",
           }}
         >
           {filtered.length > 0 ? (

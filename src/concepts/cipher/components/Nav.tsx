@@ -93,8 +93,11 @@ export default function Nav() {
     router.refresh();
   };
 
-  const navBg = theme === "dark" ? "rgba(10, 13, 18, 0.95)" : "rgba(255, 255, 255, 0.95)";
-  const mobileBg = theme === "dark" ? "rgba(10, 13, 18, 0.97)" : "rgba(255, 255, 255, 0.97)";
+  const navBg = scrolled
+    ? (theme === "dark" ? "rgba(10, 13, 18, 0.85)" : "rgba(255, 255, 255, 0.85)")
+    : (theme === "dark" ? "rgba(10, 13, 18, 0.4)" : "rgba(255, 255, 255, 0.4)");
+  const mobileBg = theme === "dark" ? "rgba(10, 13, 18, 0.95)" : "rgba(255, 255, 255, 0.95)";
+  const navBorder = theme === "dark" ? "1px solid rgba(255, 255, 255, 0.06)" : "1px solid rgba(0, 0, 0, 0.06)";
 
   return (
     <>
@@ -123,11 +126,12 @@ export default function Nav() {
             display: flex;
             flex-direction: column;
             position: absolute;
-            top: 56px;
+            top: 64px;
             left: 0;
             right: 0;
             background: ${mobileBg};
-            border-bottom: 1px solid ${colors.border};
+            backdrop-filter: blur(16px);
+            border-bottom: ${navBorder};
             padding: 8px 0;
             z-index: 99;
           }
@@ -143,9 +147,9 @@ export default function Nav() {
           left: 0,
           right: 0,
           zIndex: 100,
-          background: scrolled ? navBg : "transparent",
-          borderBottom: `1px solid ${colors.border}`,
-          backdropFilter: scrolled ? "blur(12px)" : "none",
+          background: navBg,
+          borderBottom: navBorder,
+          backdropFilter: "blur(16px)",
           transition: "background 0.3s ease-in-out",
         }}
       >
@@ -154,7 +158,7 @@ export default function Nav() {
             maxWidth: "1280px",
             margin: "0 auto",
             padding: "0 24px",
-            height: "56px",
+            height: "64px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -170,6 +174,7 @@ export default function Nav() {
               letterSpacing: "0.2em",
               color: colors.accent,
               textDecoration: "none",
+              textShadow: "0 0 20px rgba(0, 255, 178, 0.3)",
             }}
           >
             PURE PEPTIDES

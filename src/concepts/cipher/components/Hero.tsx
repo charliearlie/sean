@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { cipherTokens } from "@/concepts/cipher/tokens";
+import { cipherTokens, glowEffects } from "@/concepts/cipher/tokens";
 import { useLocale, useT } from "@/shared/i18n/context";
 import { useColors, useTheme } from "@/shared/context/ThemeContext";
 import type { Product } from "@/shared/types/product";
@@ -30,11 +30,18 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
     ? Math.min(...spotlight.variants.map((v) => v.price))
     : null;
 
+  const glassBg = theme === "dark"
+    ? "rgba(15, 19, 24, 0.6)"
+    : "rgba(248, 249, 251, 0.6)";
+  const glassBorder = theme === "dark"
+    ? "1px solid rgba(255, 255, 255, 0.08)"
+    : "1px solid rgba(0, 0, 0, 0.06)";
+
   return (
     <section
       style={{
         position: "relative",
-        minHeight: "min(70vh, 560px)",
+        minHeight: "min(80vh, 640px)",
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
@@ -47,6 +54,10 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
           from { opacity: 0; }
           to { opacity: 1; }
         }
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-20px); }
+        }
         @media (max-width: 768px) {
           .hero-columns {
             flex-direction: column !important;
@@ -54,7 +65,7 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
           .hero-left {
             width: 100% !important;
             text-align: center !important;
-            padding-top: 80px !important;
+            padding-top: 100px !important;
             padding-bottom: 24px !important;
           }
           .hero-right {
@@ -66,11 +77,46 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
           .hero-cta-row {
             justify-content: center !important;
           }
-          .hero-trust-list {
-            align-items: center !important;
+          .hero-stats-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+            max-width: 100% !important;
+          }
+          .hero-badge {
+            margin-left: auto !important;
+            margin-right: auto !important;
           }
         }
       `}</style>
+
+      {/* Floating decoration orbs */}
+      <div
+        style={{
+          position: "absolute",
+          top: -100,
+          right: -100,
+          width: 400,
+          height: 400,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(0, 255, 178, 0.06) 0%, transparent 70%)",
+          pointerEvents: "none",
+          zIndex: 1,
+          animation: "float 6s ease-in-out infinite",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: -60,
+          left: -60,
+          width: 240,
+          height: 240,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(0, 255, 178, 0.04) 0%, transparent 70%)",
+          pointerEvents: "none",
+          zIndex: 1,
+          animation: "float 6s ease-in-out infinite 2s",
+        }}
+      />
 
       <div
         className="hero-columns"
@@ -79,12 +125,12 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
           zIndex: 2,
           maxWidth: "1280px",
           margin: "0 auto",
-          padding: "80px 24px 60px",
+          padding: "100px 24px 80px",
           width: "100%",
           display: "flex",
           flexDirection: isRtl ? "row-reverse" : "row",
           alignItems: "center",
-          gap: "40px",
+          gap: "48px",
         }}
       >
         {/* Left column */}
@@ -95,6 +141,42 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
             textAlign: isRtl ? "right" : "left",
           }}
         >
+          {/* Badge */}
+          <div
+            className="hero-badge"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "8px 16px",
+              borderRadius: "999px",
+              background: "rgba(0, 255, 178, 0.1)",
+              border: "1px solid rgba(0, 255, 178, 0.2)",
+              marginBottom: "24px",
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: colors.accent,
+                boxShadow: "0 0 8px rgba(0, 255, 178, 0.6)",
+              }}
+            />
+            <span
+              style={{
+                fontFamily: typography.monoFont,
+                fontSize: "11px",
+                letterSpacing: "0.15em",
+                color: colors.accent,
+                textTransform: "uppercase",
+              }}
+            >
+              {t("hero.badge")}
+            </span>
+          </div>
+
           <h1
             style={{
               fontFamily: typography.headingFont,
@@ -108,37 +190,65 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
           >
             {t("hero.line1")}
             <br />
-            <span style={{ color: colors.accent }}>{t("hero.line2")}</span>
+            <span style={{ color: colors.accent, textShadow: glowEffects.text }}>
+              {t("hero.line2")}
+            </span>
           </h1>
 
-          <ul
-            className="hero-trust-list"
+          {/* Stats grid */}
+          <div
+            className="hero-stats-grid"
             style={{
-              listStyle: "none",
-              padding: 0,
-              margin: "0 0 32px 0",
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "12px",
+              marginBottom: "32px",
+              maxWidth: "440px",
             }}
           >
-            {["hero.trust1", "hero.trust2", "hero.trust3"].map((key) => (
-              <li
-                key={key}
+            {[
+              { valueKey: "hero.stat1Value", labelKey: "hero.stat1Label" },
+              { valueKey: "hero.stat2Value", labelKey: "hero.stat2Label" },
+              { valueKey: "hero.stat3Value", labelKey: "hero.stat3Label" },
+            ].map(({ valueKey, labelKey }) => (
+              <div
+                key={valueKey}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  fontSize: "14px",
-                  color: colors.mutedForeground,
-                  lineHeight: 1.5,
+                  background: glassBg,
+                  backdropFilter: "blur(12px)",
+                  border: glassBorder,
+                  borderRadius: "12px",
+                  padding: "16px 12px",
+                  textAlign: "center",
                 }}
               >
-                <span style={{ color: colors.accent, fontSize: "16px" }}>✓</span>
-                {t(key)}
-              </li>
+                <p
+                  style={{
+                    fontFamily: typography.monoFont,
+                    fontSize: "22px",
+                    fontWeight: 700,
+                    color: colors.accent,
+                    margin: 0,
+                    textShadow: glowEffects.textSubtle,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {t(valueKey)}
+                </p>
+                <p
+                  style={{
+                    fontSize: "10px",
+                    color: colors.mutedForeground,
+                    margin: "4px 0 0",
+                    letterSpacing: "0.05em",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {t(labelKey)}
+                </p>
+              </div>
             ))}
-          </ul>
+          </div>
 
           <div
             className="hero-cta-row"
@@ -150,7 +260,6 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
           >
             <Link
               href="/shop"
-
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -162,19 +271,21 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
                 background: colors.accent,
                 padding: "14px 28px",
                 border: "none",
+                borderRadius: "8px",
                 textDecoration: "none",
                 textTransform: "uppercase",
-                transition: "all 0.2s ease-in-out",
+                transition: "all 0.3s ease-in-out",
+                boxShadow: glowEffects.button,
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.background = "transparent";
                 (e.currentTarget as HTMLElement).style.color = colors.accent;
-                (e.currentTarget as HTMLElement).style.boxShadow = `inset 0 0 0 1px ${colors.accent}`;
+                (e.currentTarget as HTMLElement).style.boxShadow = `inset 0 0 0 2px ${colors.accent}, ${glowEffects.button}`;
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.background = colors.accent;
                 (e.currentTarget as HTMLElement).style.color = colors.accentForeground;
-                (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                (e.currentTarget as HTMLElement).style.boxShadow = glowEffects.button;
               }}
             >
               {t("hero.cta")}
@@ -182,7 +293,6 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
 
             <Link
               href="/shop"
-
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -194,9 +304,10 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
                 background: "transparent",
                 padding: "14px 28px",
                 border: `1px solid ${colors.border}`,
+                borderRadius: "8px",
                 textDecoration: "none",
                 textTransform: "uppercase",
-                transition: "all 0.2s ease-in-out",
+                transition: "all 0.3s ease-in-out",
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.borderColor = colors.accent;
@@ -225,27 +336,28 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
           {spotlight && (
             <Link
               href={`/product/${spotlight.slug}`}
-
               style={{ textDecoration: "none" }}
             >
               <div
                 className="hero-spotlight-card"
                 style={{
                   width: "360px",
-                  background: colors.card,
-                  border: `1px solid ${colors.border}`,
+                  background: glassBg,
+                  backdropFilter: "blur(16px)",
+                  border: glassBorder,
+                  borderRadius: "16px",
                   overflow: "hidden",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
                   cursor: "pointer",
-                  transition: "all 0.2s ease-in-out",
+                  transition: "all 0.3s ease-in-out",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(0,0,0,0.25)";
-                  (e.currentTarget as HTMLElement).style.borderColor = colors.accent;
+                  (e.currentTarget as HTMLElement).style.boxShadow = "0 0 30px rgba(0, 255, 178, 0.2), 0 12px 40px rgba(0,0,0,0.3)";
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(0,0,0,0.15)";
-                  (e.currentTarget as HTMLElement).style.borderColor = colors.border;
+                  (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(0,0,0,0.2)";
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
                 }}
               >
                 <div
@@ -254,6 +366,8 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
                     width: "360px",
                     height: "380px",
                     background: colors.muted,
+                    borderRadius: "16px 16px 0 0",
+                    overflow: "hidden",
                   }}
                 >
                   {spotlightImg && (
@@ -267,7 +381,7 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
                     />
                   )}
                 </div>
-                <div style={{ padding: "16px" }}>
+                <div style={{ padding: "20px" }}>
                   <p
                     style={{
                       fontFamily: typography.monoFont,
@@ -283,9 +397,10 @@ export default function Hero({ featured, spotlight: spotlightProp }: HeroProps) 
                     <p
                       style={{
                         fontFamily: typography.monoFont,
-                        fontSize: "11px",
-                        color: colors.mutedForeground,
-                        margin: "4px 0 0",
+                        fontSize: "12px",
+                        color: colors.accent,
+                        margin: "6px 0 0",
+                        fontWeight: 600,
                       }}
                     >
                       From AED {spotlightMinPrice}

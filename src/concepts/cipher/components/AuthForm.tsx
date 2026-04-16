@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { cipherTokens } from "@/concepts/cipher/tokens";
+import { cipherTokens, glowEffects } from "@/concepts/cipher/tokens";
 import { useT } from "@/shared/i18n/context";
-import { useColors } from "@/shared/context/ThemeContext";
+import { useColors, useTheme } from "@/shared/context/ThemeContext";
 
 const { typography } = cipherTokens;
 
@@ -27,6 +27,8 @@ export default function AuthForm({ mode, onSubmit, loading, error }: AuthFormPro
   const [confirmPassword, setConfirmPassword] = useState("");
   const t = useT();
   const colors = useColors();
+  const { theme } = useTheme();
+  const glassBorder = theme === "dark" ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)";
 
   const labelStyle: React.CSSProperties = {
     fontFamily: typography.monoFont,
@@ -48,7 +50,7 @@ export default function AuthForm({ mode, onSubmit, loading, error }: AuthFormPro
     width: "100%",
     outline: "none",
     boxSizing: "border-box",
-    borderRadius: "0px",
+    borderRadius: "8px",
     transition: "border-color 0.2s ease-in-out",
   };
 
@@ -76,7 +78,7 @@ export default function AuthForm({ mode, onSubmit, loading, error }: AuthFormPro
         }
       `}</style>
 
-      <div style={{ border: `1px solid ${colors.border}` }}>
+      <div style={{ border: `1px solid ${glassBorder}`, borderRadius: "12px", overflow: "hidden" }}>
         <div style={sectionHeaderStyle}>
           {mode === "login" ? t("auth.credentials") : t("auth.accountDetails")}
         </div>
@@ -159,6 +161,7 @@ export default function AuthForm({ mode, onSubmit, loading, error }: AuthFormPro
                 color: "#ef4444",
                 padding: "10px 12px",
                 border: "1px solid #ef4444",
+                borderRadius: "8px",
                 background: "rgba(239, 68, 68, 0.08)",
               }}
             >
@@ -181,21 +184,22 @@ export default function AuthForm({ mode, onSubmit, loading, error }: AuthFormPro
               border: "none",
               cursor: loading ? "not-allowed" : "pointer",
               textTransform: "uppercase",
-              transition: "all 0.2s ease-in-out",
-              borderRadius: "0px",
+              transition: "all 0.3s ease-in-out",
+              borderRadius: "8px",
+              boxShadow: loading ? "none" : glowEffects.button,
             }}
             onMouseEnter={(e) => {
               if (!loading) {
                 (e.currentTarget as HTMLElement).style.background = "transparent";
                 (e.currentTarget as HTMLElement).style.color = colors.accent;
-                (e.currentTarget as HTMLElement).style.boxShadow = `inset 0 0 0 1px ${colors.accent}`;
+                (e.currentTarget as HTMLElement).style.boxShadow = `inset 0 0 0 2px ${colors.accent}, ${glowEffects.button}`;
               }
             }}
             onMouseLeave={(e) => {
               if (!loading) {
                 (e.currentTarget as HTMLElement).style.background = colors.accent;
                 (e.currentTarget as HTMLElement).style.color = colors.accentForeground;
-                (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                (e.currentTarget as HTMLElement).style.boxShadow = glowEffects.button;
               }
             }}
           >
